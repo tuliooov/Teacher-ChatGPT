@@ -1,0 +1,36 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-size: 1.6rem;
+}
+
+.show-only-print{
+  display: none;  
+}
+
+@media print {
+  .show-only-print {
+    display: block;
+  }
+}
+
+:root {
+    font-size: 62.5%;
+    --background-color: #fffffe;
+    --secondary-background-color: #f8f8ff;
+    --red: #E45858;
+    --title-color: #121214;
+    --purple: #6246EA;
+    --white: #fffffe;
+    --text-color: #7C7C8A;
+}
+
+body {
+    background-color: var(--background-color);
+    overflow-x: hidden;
+}
+
+button {
+    cursor: pointer;
+}

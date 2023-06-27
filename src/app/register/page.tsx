@@ -32,14 +32,12 @@ export default function Register() {
   const { changeUser } = useUser();
 
   const onSubmit = async (data: ISchemaRegisterUser) => {
-    console.log(data);
     try {
       setLoading(true);
       const response = await axios.post("/api/oauth/register", data);
       await changeUser(response.data.data);
       push("/chat");
     } catch (error) {
-      console.warn("Post register user: ", error);
       setLoading(false);
     }
   };

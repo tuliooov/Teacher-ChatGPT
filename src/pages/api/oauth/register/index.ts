@@ -29,7 +29,6 @@ export const findUser = async (email: string, res: any) => {
     },
   });
   if (userFound) {
-    console.log("🚀 ~ file: index.ts:32 ~ findUser ~ userFound:", userFound)
     return res.status(400).json({ error: `Usuãrio ${email} ja existe` });
   }
 };
@@ -41,7 +40,6 @@ export const createUser = async (
   type: ITypeUserEnum,
   res: any
 ) => {
-  console.log(!email , !pass , !name , !type)
   if (!email || !pass || !name || !type) {
     return res.status(400).json({ error: `Formulário incompleto.` });
   }
@@ -59,7 +57,6 @@ export const createUser = async (
       type,
     },
   });
-  console.log("🚀 ~ file: index.ts:61 ~ userCreated:", userCreated)
   const { password, ...restUser } = userCreated;
 
   const accessToken = await jwtSystem.signAccessToken(restUser);
@@ -71,7 +68,6 @@ export const createUser = async (
 const handler: NextApiHandler = async (req, res) => {
   if (req.method === "POST") {
     const requestBody = (await parseBody(req)) as any;
-    console.log("🚀 ~ file: index.ts:73 ~ consthandler:NextApiHandler= ~ requestBody:", requestBody)
 
     const { email, password: pass, name } = requestBody.fields as IDataRequest;
 

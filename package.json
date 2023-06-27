@@ -36,6 +36,7 @@
     "formidable": "^3.3.2",
     "http-errors": "^2.0.0",
     "jsonwebtoken": "^9.0.0",
+    "languagedetect": "^2.0.0",
     "leaflet": "^1.9.3",
     "material-ui-snackbar-provider": "^2.0.0",
     "multer": "^1.4.5-lts.1",

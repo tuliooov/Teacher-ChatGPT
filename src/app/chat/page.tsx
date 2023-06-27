@@ -13,6 +13,7 @@ import {
   Paper,
   styled,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Configuration, OpenAIApi } from "openai";
@@ -21,40 +22,7 @@ import { Microphone } from "./components/Microphone";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Answer } from "./components/Answer";
 import SendIcon from "@mui/icons-material/Send";
-
-const BootstrapInput = styled(InputBase)(({ theme }) => ({
-  'label + &': {
-    marginTop: theme.spacing(3),
-  },
-  '& .MuiInputBase-input': {
-    borderRadius: 4,
-    position: 'relative',
-    backgroundColor: theme.palette.background.paper,
-    border: '1px solid #ced4da',
-    fontSize: 16,
-    padding: '10px 26px 10px 12px',
-    transition: theme.transitions.create(['border-color', 'box-shadow']),
-    // Use the system font instead of the default Roboto font.
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '&:focus': {
-      borderRadius: 4,
-      borderColor: '#80bdff',
-      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-    },
-  },
-}));
-
+import { ConfigLanguage, VoiceSelectedType } from "./components/ConfigLanguage";
 
 type AuthorType = "USER" | "BOT";
 
@@ -73,7 +41,7 @@ export default function Chat() {
   const [loadingGPT, setLoadingGPT] = useState<boolean>(false);
   const [currentMessage, setCurrentMessage] = useState("");
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [voice, setVoice] = useState<SpeechSynthesisVoice>();
+  const [voiceSelected, setVoiceSelected] = useState<VoiceSelectedType>();
 
   const { finalTranscript } = useSpeechRecognition();
 
@@ -130,41 +98,44 @@ export default function Chat() {
       const time = setInterval(() => {
         const synth = window.speechSynthesis;
         const voicesGetted = synth.getVoices();
-        const voicesFiltered = (voicesGetted || []).filter(
-          (voice) => voice.lang === "pt-BR"
-        );
-        setVoices(voicesFiltered);
+        setVoices(voicesGetted);
+        if (!voiceSelected && voicesGetted.length)
+          setVoiceSelected({
+            english: {
+              lang: "en-US",
+              rate: 2,
+              voice: voicesGetted.find((v) => v.lang === "en-US")!,
+            },
+            portuguese: {
+              lang: "pt-BR",
+              rate: 2,
+              voice: voicesGetted.find((v) => v.lang === "pt-BR")!,
+            },
+          });
       }, 500);
       return () => clearInterval(time);
     }
     return () => {};
-  }, [voices.length]);
+  }, [voiceSelected, voices.length]);
 
   return (
     <div>
-      <FormControl sx={{ mb: 2 }} variant="standard" fullWidth>
-        <NativeSelect
-          value={voice?.name}
-          onChange={(e) => {
-            const newVoice = voices.find((v) => v.name === e.target.value)
-            setVoice(newVoice)
-          }}
-          input={<BootstrapInput />}
-        >
-          {voices.map((voice) => (
-            <option value={voice.name} key={voice.name}>
-              {voice.name}
-            </option>
-          ))}
-        </NativeSelect>
-      </FormControl>
+      <ConfigLanguage
+        voiceSelected={voiceSelected}
+        voices={voices}
+        setVoiceSelected={setVoiceSelected}
+      />
 
       <Grid container>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{ mb: 4 }}>
           {
             <Grid item display="flex" direction="column" gap="2rem">
               {conversations.map((conversation, index) => (
-                <Answer conversation={conversation} key={index} voice={voice}/>
+                <Answer
+                  conversation={conversation}
+                  key={index}
+                  voiceSelected={voiceSelected}
+                />
               ))}
               {loadingGPT && <CircularProgress size={16} />}
             </Grid>
@@ -204,21 +175,26 @@ export default function Chat() {
             >
               <InputBase
                 sx={{ ml: 1, flex: 1 }}
-                placeholder="Digite alguma coisa para o bot responder"
+                placeholder="Digite alguma coisa"
                 inputProps={{
                   "aria-label": "digite alguma coisa para o bot responder",
+                  style: { fontSize: "2rem" },
                 }}
                 value={currentMessage}
                 onChange={(e) => changeInput(e.target.value)}
+                multiline
               />
-              <IconButton
-                type="button"
-                sx={{ p: "10px" }}
-                aria-label="send message"
-                onClick={sendMessage}
-              >
-                <SendIcon />
-              </IconButton>
+              <Tooltip title="Enviar mensagem">
+                <IconButton
+                  type="button"
+                  sx={{ p: "10px" }}
+                  aria-label="send message"
+                  onClick={sendMessage}
+                >
+                  <SendIcon />
+                </IconButton>
+              </Tooltip>
+
               <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
               <Microphone />
             </Paper>

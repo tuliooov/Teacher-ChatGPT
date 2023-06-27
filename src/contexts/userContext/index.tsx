@@ -82,7 +82,6 @@ export const UserProvider = ({ children }: { children: any }) => {
           debugger
           logOut();
         }
-        console.log("err.response", err.response);
         handleMessage(err.response?.data?.error || err.message);
         return Promise.reject(err);
       }

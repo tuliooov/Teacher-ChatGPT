@@ -18,7 +18,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { MainListItems } from "./MenuOptions";
 import { useUser } from "@/contexts/userContext";
-import { Grid } from "@mui/material";
+import { Grid, Tooltip } from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 // import {  useThemeDetector } from "@/contexts/useThemeDetector";
@@ -107,8 +107,9 @@ export default function Dashboard({ children }: DashboardProps) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" 
-      // open={open}
+      <AppBar
+        position="fixed"
+        // open={open}
       >
         <Toolbar
           sx={{
@@ -127,7 +128,13 @@ export default function Dashboard({ children }: DashboardProps) {
           >
             <MenuIcon />
           </IconButton> */}
-          <Grid display={"flex"} alignItems={"center"} gap={"1rem"} justifyContent="space-between" width={'100%'}>
+          <Grid
+            display={"flex"}
+            alignItems={"center"}
+            gap={"1rem"}
+            justifyContent="space-between"
+            width={"100%"}
+          >
             {!!user?.name && (
               <Typography
                 component="p"
@@ -139,9 +146,12 @@ export default function Dashboard({ children }: DashboardProps) {
                 {user?.name?.toUpperCase()}
               </Typography>
             )}
-            <IconButton edge="end" color="inherit" onClick={logOut}>
-              <LogoutIcon />
-            </IconButton>
+
+            <Tooltip title="Desconectar">
+              <IconButton edge="end" color="inherit" onClick={logOut}>
+                <LogoutIcon />
+              </IconButton>
+            </Tooltip>
           </Grid>
         </Toolbar>
       </AppBar>

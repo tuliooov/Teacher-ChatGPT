@@ -33,14 +33,12 @@ export default function SignInSide() {
   const { changeUser, logOut } = useUser();
 
   const onSubmit = async (data: ISchemaLogin) => {
-    console.log(data);
     try {
       setLoading(true);
       const response = await axios.post("/api/oauth/login", data);
       await changeUser(response.data.data);
       push("/chat");
     } catch (error) {
-      console.warn("Post login: ", error);
       setLoading(false);
     }
   };

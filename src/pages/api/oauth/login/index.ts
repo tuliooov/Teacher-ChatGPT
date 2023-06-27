@@ -36,7 +36,6 @@ export interface IUser {
 const handler: NextApiHandler = async (req, res) => {
   if (req.method === "POST") {
     const requestBody = (await parseBody(req)) as any;
-    console.log("🚀 ~ file: index.ts:41 ~ consthandler:NextApiHandler= ~ requestBody:", requestBody)
 
     const { email, password: pass } = requestBody.fields as IDataRequest;
 

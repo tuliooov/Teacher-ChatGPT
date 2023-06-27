@@ -16,8 +16,8 @@ export function Answer({ conversation }: { conversation: ConversationType}) {
         text={conversation.text}
         startBtn={<VolumeOffIcon fontSize="inherit"/>} 
         stopBtn={<VolumeUpIcon fontSize="inherit"/>} 
-        pitch={10}
-        rate={1}
+        pitch={5}
+        rate={5}
         volume={10}
         style={{}}
       />

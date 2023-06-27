@@ -5004,6 +5004,11 @@ react-leaflet@^4.2.0:
   dependencies:
     "@react-leaflet/core" "^2.1.0"
 
+react-speech-kit@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-speech-kit/-/react-speech-kit-3.0.1.tgz#8bd936adfe064be1c5a07e2992dfdfd772e80d14"
+  integrity sha512-MXNOciISanhmnxpHJkBOev3M3NPDpW1T7nTc/eGw5pO9cXpoUccRxZkmr/IlpTPbPEneDNeTmbwri/YweyctZg==
+
 react-speech-recognition@^3.10.0:
   version "3.10.0"
   resolved "https://registry.npmjs.org/react-speech-recognition/-/react-speech-recognition-3.10.0.tgz"
@@ -5019,7 +5024,7 @@ react-speech@^1.0.2:
 
 react-text-to-speech@^0.4.1:
   version "0.4.1"
-  resolved "https://registry.yarnpkg.com/react-text-to-speech/-/react-text-to-speech-0.4.1.tgz#2e95c4d5a2d314718a6687d659c790ced3887cb0"
+  resolved "https://registry.npmjs.org/react-text-to-speech/-/react-text-to-speech-0.4.1.tgz"
   integrity sha512-D0QXBpYkVKr0YOBO2zmKGPoVJ3k6VeFv+4dXpz9FcJhxI0u4bbiO9j6ws3liZYGOb6e62N0HmGOgJy6vP35yIA==
 
 react-transition-group@^4.4.5:

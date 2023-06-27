@@ -16,6 +16,7 @@ import { LoadingButton } from "@mui/lab";
 import { useUser } from "@/contexts/userContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@mui/material";
 
 export default function Register() {
   const { push } = useRouter();
@@ -36,7 +37,7 @@ export default function Register() {
       setLoading(true);
       const response = await axios.post("/api/oauth/register", data);
       await changeUser(response.data.data);
-      push("/dashboard");
+      push("/chat");
     } catch (error) {
       console.warn("Post register user: ", error);
       setLoading(false);
@@ -86,7 +87,7 @@ export default function Register() {
                 {...register("name")}
                 fullWidth
                 id="name"
-                label="Nome administrador"
+                label="Nome"
                 name="name"
                 autoFocus
                 error={!!errors.name?.message}
@@ -123,6 +124,10 @@ export default function Register() {
               >
                 Cadastrar
               </LoadingButton>
+
+              <Button variant="text" onClick={() => push("/")}>
+                Ja possuo cadastro
+              </Button>
             </Box>
           </Box>
         </Grid>

@@ -25,19 +25,20 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 
 function Copyright(props: any) {
   return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://tuliooov.github.io/my-portfolio/">
-        Tuliooov
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
+    <></>
+    // <Typography
+    //   variant="body2"
+    //   color="text.secondary"
+    //   align="center"
+    //   {...props}
+    // >
+    //   {"Copyright © "}
+    //   <Link color="inherit" href="https://tuliooov.github.io/my-portfolio/">
+    //     Tuliooov
+    //   </Link>{" "}
+    //   {new Date().getFullYear()}
+    //   {"."}
+    // </Typography>
   );
 }
 
@@ -98,21 +99,23 @@ interface DashboardProps {
 export default function Dashboard({ children }: DashboardProps) {
   const { logOut, user } = useUser();
   // const {isDarkTheme, swapTheme} = useThemeDetector()
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  // const [open, setOpen] = React.useState(true);
+  // const toggleDrawer = () => {
+  //   setOpen(!open);
+  // };
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="absolute" open={open}>
+      <AppBar position="fixed" 
+      // open={open}
+      >
         <Toolbar
           sx={{
             pr: "24px", // keep right padding when drawer closed
           }}
         >
-          <IconButton
+          {/* <IconButton
             edge="start"
             color="inherit"
             aria-label="open drawer"
@@ -123,8 +126,8 @@ export default function Dashboard({ children }: DashboardProps) {
             }}
           >
             <MenuIcon />
-          </IconButton>
-          <Grid display={"flex"} alignItems={"center"} gap={"1rem"}>
+          </IconButton> */}
+          <Grid display={"flex"} alignItems={"center"} gap={"1rem"} justifyContent="space-between" width={'100%'}>
             {!!user?.name && (
               <Typography
                 component="p"
@@ -142,7 +145,7 @@ export default function Dashboard({ children }: DashboardProps) {
           </Grid>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      {/* <Drawer variant="permanent" open={open}>
         <Toolbar
           sx={{
             display: "flex",
@@ -159,9 +162,9 @@ export default function Dashboard({ children }: DashboardProps) {
         <List component="nav">
           <MainListItems />
         </List>
-      </Drawer>
+      </Drawer> */}
       <Box
-        component="main"
+        // component="main"
         sx={{
           backgroundColor: (theme) =>
             theme.palette.mode === "light"
@@ -182,7 +185,7 @@ export default function Dashboard({ children }: DashboardProps) {
         >
           {children}
         </Container>
-        <Copyright sx={{ pt: 4 }} />
+        {/* <Copyright sx={{ pt: 4 }} /> */}
       </Box>
     </Box>
   );

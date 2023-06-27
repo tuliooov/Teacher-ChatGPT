@@ -16,9 +16,10 @@ import { LoadingButton } from "@mui/lab";
 import { useUser } from "@/contexts/userContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button, createTheme, Link, ThemeProvider } from "@mui/material";
 
 export default function SignInSide() {
-  "use client"
+  "use client";
   const { push } = useRouter();
 
   const {
@@ -37,22 +38,25 @@ export default function SignInSide() {
       setLoading(true);
       const response = await axios.post("/api/oauth/login", data);
       await changeUser(response.data.data);
-      push("/dashboard");
+      push("/chat");
     } catch (error) {
       console.warn("Post login: ", error);
       setLoading(false);
     }
   };
 
-
-
   useEffect(() => {
     logOut();
   }, [logOut]);
 
-
   return (
-    <>
+    <ThemeProvider
+      theme={createTheme({
+        palette: {
+          mode: "dark",
+        },
+      })}
+    >
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
@@ -67,7 +71,7 @@ export default function SignInSide() {
             backgroundPosition: "center",
           }}
         />
-        <Grid item xs={12} sm={7} md={4} component={Paper} elevation={6} square> 
+        <Grid item xs={12} sm={7} md={4} component={Paper} elevation={6} square>
           <Box
             sx={{
               my: 8,
@@ -88,7 +92,7 @@ export default function SignInSide() {
               flexDirection={"column"}
               gap={"2rem"}
               width={"100%"}
-              sx={{mt: 2}}
+              sx={{ mt: 2 }}
             >
               <TextField
                 {...register("email")}
@@ -120,10 +124,14 @@ export default function SignInSide() {
               >
                 Entrar
               </LoadingButton>
+
+              <Button variant="text" onClick={() => push("/register")}>
+                Cadastrar
+              </Button>
             </Box>
           </Box>
         </Grid>
       </Grid>
-    </>
+    </ThemeProvider>
   );
 }

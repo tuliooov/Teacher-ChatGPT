@@ -16,6 +16,16 @@ export interface VoiceSelectedType {
   portuguese: VoiceType;
 }
 
+export interface SettingsType {
+  rate: number;
+  audioActived: boolean;
+  readActived: boolean;
+  sendingAudioInEnd: boolean;
+  playAudioAutomatic: boolean;
+  nameVoiceSelectedEnglish: string
+  nameVoiceSelectedPortuguese: string
+
+}
 export interface SettingsContextType {
   rate: number;
   changeRate: (value: number) => void;
@@ -31,6 +41,8 @@ export interface SettingsContextType {
   changeSendingAudioInEnd: (value: boolean) => void;
   playAudioAutomatic: boolean;
   changePlayAudioAutomatic: (value: boolean) => void;
+  nameVoiceSelectedEnglish: string
+  nameVoiceSelectedPortuguese: string
 }
 
 export const SettingsContext = createContext({});
@@ -47,48 +59,66 @@ export const getSettings = () => {
   }
   return {
     rate: 1,
-    voices: [],
-    voiceSelected: undefined,
     audioActived: true,
     readActived: true,
     sendingAudioInEnd: false,
     playAudioAutomatic: false,
+    nameVoiceSelectedEnglish: "",
+    nameVoiceSelectedPortuguese: "",
   };
 };
 
 export const SettingsProvider = ({ children }: { children: any }) => {
+  const [settings, setSettings] = useState<SettingsType>(getSettings());
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [voiceSelected, setVoiceSelected] = useState<VoiceSelectedType>();
 
-  const [settings, setSettings] = useState<SettingsContextType>(getSettings());
+  const changeSettings = (values: SettingsType) => {
+    localStorage.setItem("settings", JSON.stringify(values));
+    setSettings(values);
+  };
 
-  const { audioActived, rate, playAudioAutomatic, readActived, voiceSelected, voices, sendingAudioInEnd} = settings
-  console.log("🚀 ~ file: index.tsx:64 ~ SettingsProvider ~ settings:", settings)
-  
+  const {
+    audioActived,
+    rate,
+    playAudioAutomatic,
+    readActived,
+    sendingAudioInEnd,
+    nameVoiceSelectedEnglish,
+    nameVoiceSelectedPortuguese
+  } = settings;
+
   const changePlayAudioAutomatic = (value: boolean) => {
-    setSettings((state) => ({...state, playAudioAutomatic: value}));
+    changeSettings({ ...settings, playAudioAutomatic: value });
   };
 
   const changeSendingAudioInEnd = (value: boolean) => {
-    setSettings((state) => ({...state, sendingAudioInEnd: value}));
+    changeSettings({ ...settings, sendingAudioInEnd: value });
   };
 
   const changeAudioActived = (value: boolean) => {
-    setSettings((state) => ({...state, audioActived: value}));
+    changeSettings({ ...settings, audioActived: value });
   };
 
   const changeReadActived = (value: boolean) => {
-    setSettings((state) => ({...state, readActived: value}));
+    changeSettings({ ...settings, readActived: value });
   };
 
   const changeRate = (value: number) => {
-    setSettings((state) => ({...state, rate: value}));
+    changeSettings({ ...settings, rate: value });
   };
 
   const changeVoiceSelected = (value: VoiceSelectedType) => {
-    setSettings((state) => ({...state, voiceSelected: value}));
+    changeSettings({
+      ...settings,
+      nameVoiceSelectedPortuguese: value.portuguese.voice.name,
+      nameVoiceSelectedEnglish: value.english.voice.name,
+    });
+    setVoiceSelected(value);
   };
 
   const changeVoices = (value: SpeechSynthesisVoice[]) => {
-    setSettings((state) => ({...state, voices: value}));
+    setVoices(value);
   };
 
   return (
@@ -108,6 +138,8 @@ export const SettingsProvider = ({ children }: { children: any }) => {
         changeSendingAudioInEnd,
         playAudioAutomatic,
         changePlayAudioAutomatic,
+        nameVoiceSelectedEnglish,
+        nameVoiceSelectedPortuguese
       }}
     >
       {children}

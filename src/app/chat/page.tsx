@@ -40,6 +40,8 @@ export default function Chat() {
     voiceSelected,
     voices,
     sendingAudioInEnd,
+    nameVoiceSelectedEnglish,
+    nameVoiceSelectedPortuguese
   } = useSettings();
 
   const [conversations, setConversations] = useState<ConversationType[]>([
@@ -125,7 +127,6 @@ export default function Chat() {
   useEffect(() => {
     const element = document.getElementById('chatConversation')
     if (element) element.scrollTo(0, element.scrollHeight)
-    console.log("🚀 ~ file: page.tsx:128 ~ useEffect ~ element:", element)
   }, [conversations])
 
   useEffect(() => {
@@ -138,18 +139,18 @@ export default function Chat() {
           changeVoiceSelected({
             english: {
               lang: "en-US",
-              voice: voicesGetted.find((v) => v.lang === "en-US")!,
+              voice: voicesGetted.find((v) => v.name === nameVoiceSelectedEnglish) || voicesGetted.find((v) => v.lang === "en-US")!,
             },
             portuguese: {
               lang: "pt-BR",
-              voice: voicesGetted.find((v) => v.lang === "pt-BR")!,
+              voice: voicesGetted.find((v) => v.name === nameVoiceSelectedPortuguese) || voicesGetted.find((v) => v.lang === "pt-BR")!,
             },
           });
       }, 500);
       return () => clearInterval(time);
     }
     return () => {};
-  }, [changeVoiceSelected, changeVoices, voiceSelected, voices.length]);
+  }, [changeVoiceSelected, changeVoices, nameVoiceSelectedEnglish, nameVoiceSelectedPortuguese, voiceSelected, voices.length]);
 
   return (
     <div >

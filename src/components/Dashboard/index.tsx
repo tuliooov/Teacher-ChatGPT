@@ -21,26 +21,8 @@ import { useUser } from "@/contexts/userContext";
 import { Grid, Tooltip } from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
-// import {  useThemeDetector } from "@/contexts/useThemeDetector";
+import { Settings } from "@/app/chat/components/Settings";
 
-function Copyright(props: any) {
-  return (
-    <></>
-    // <Typography
-    //   variant="body2"
-    //   color="text.secondary"
-    //   align="center"
-    //   {...props}
-    // >
-    //   {"Copyright © "}
-    //   <Link color="inherit" href="https://tuliooov.github.io/my-portfolio/">
-    //     Tuliooov
-    //   </Link>{" "}
-    //   {new Date().getFullYear()}
-    //   {"."}
-    // </Typography>
-  );
-}
 
 const drawerWidth: number = 240;
 
@@ -147,6 +129,8 @@ export default function Dashboard({ children }: DashboardProps) {
               </Typography>
             )}
 
+            <Settings />
+
             <Tooltip title="Desconectar">
               <IconButton edge="end" color="inherit" onClick={logOut}>
                 <LogoutIcon />
@@ -183,19 +167,20 @@ export default function Dashboard({ children }: DashboardProps) {
           flexGrow: 1,
           height: "100vh",
           overflow: "auto",
+          padding: '0 2rem'
         }}
+        id="chatConversation"
+
       >
         <Toolbar />
-        <Container
-          maxWidth="lg"
+        <Grid
           sx={{ mt: 4, mb: 4 }}
           style={{
-            minHeight: "calc(100vh - 200px)",
+            minHeight: "calc(100vh   - 200px)",
           }}
         >
           {children}
-        </Container>
-        {/* <Copyright sx={{ pt: 4 }} /> */}
+        </Grid>
       </Box>
     </Box>
   );

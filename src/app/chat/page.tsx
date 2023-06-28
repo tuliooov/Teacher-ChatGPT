@@ -22,7 +22,7 @@ import { Microphone } from "./components/Microphone";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Answer } from "./components/Answer";
 import SendIcon from "@mui/icons-material/Send";
-import { ConfigLanguage, VoiceSelectedType } from "./components/ConfigLanguage";
+import { useSettings } from "@/contexts/settingsContext";
 
 type AuthorType = "USER" | "BOT";
 
@@ -32,6 +32,16 @@ export interface ConversationType {
 }
 
 export default function Chat() {
+  const {
+    changeRate,
+    changeVoiceSelected,
+    changeVoices,
+    rate,
+    voiceSelected,
+    voices,
+    sendingAudioInEnd,
+  } = useSettings();
+
   const [conversations, setConversations] = useState<ConversationType[]>([
     {
       author: "BOT",
@@ -40,10 +50,23 @@ export default function Chat() {
   ]);
   const [loadingGPT, setLoadingGPT] = useState<boolean>(false);
   const [currentMessage, setCurrentMessage] = useState("");
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [voiceSelected, setVoiceSelected] = useState<VoiceSelectedType>();
-
   const { finalTranscript } = useSpeechRecognition();
+
+  const changeSpeed = () => {
+    switch (rate) {
+      case 1:
+        changeRate(0.75);
+        break;
+      case 0.75:
+        changeRate(0.5);
+        break;
+      case 0.5:
+        changeRate(1);
+        break;
+      default:
+        break;
+    }
+  };
 
   const searchAnswerGPT = useCallback(async (ask: string) => {
     const configuration = new Configuration({
@@ -74,41 +97,51 @@ export default function Chat() {
     setCurrentMessage(value);
   };
 
-  const resetInput = () => {
+  const resetInput = useCallback(() => {
     changeInput("");
-  };
+  }, []);
 
-  const sendMessage = () => {
+  const sendMessage = useCallback(() => {
     if (currentMessage) {
       resetInput();
       addConversation(currentMessage, "USER");
       setLoadingGPT(true);
       searchAnswerGPT(currentMessage);
     }
-  };
+  }, [currentMessage, resetInput, searchAnswerGPT]);
 
   useEffect(() => {
     if (finalTranscript) {
       changeInput(finalTranscript);
     }
-  }, [finalTranscript, searchAnswerGPT]);
+  }, [finalTranscript, sendingAudioInEnd]);
+
+  // useEffect(() => {
+  //   if (sendingAudioInEnd && currentMessage) {
+  //     sendMessage();
+  //   }
+  // }, [currentMessage, sendMessage, sendingAudioInEnd]);
+
+  useEffect(() => {
+    const element = document.getElementById('chatConversation')
+    if (element) element.scrollTo(0, element.scrollHeight)
+    console.log("🚀 ~ file: page.tsx:128 ~ useEffect ~ element:", element)
+  }, [conversations])
 
   useEffect(() => {
     if (!voices.length) {
       const time = setInterval(() => {
         const synth = window.speechSynthesis;
         const voicesGetted = synth.getVoices();
-        setVoices(voicesGetted);
+        changeVoices(voicesGetted);
         if (!voiceSelected && voicesGetted.length)
-          setVoiceSelected({
+          changeVoiceSelected({
             english: {
               lang: "en-US",
-              rate: 2,
               voice: voicesGetted.find((v) => v.lang === "en-US")!,
             },
             portuguese: {
               lang: "pt-BR",
-              rate: 2,
               voice: voicesGetted.find((v) => v.lang === "pt-BR")!,
             },
           });
@@ -116,27 +149,27 @@ export default function Chat() {
       return () => clearInterval(time);
     }
     return () => {};
-  }, [voiceSelected, voices.length]);
+  }, [changeVoiceSelected, changeVoices, voiceSelected, voices.length]);
 
   return (
-    <div>
-      <ConfigLanguage
-        voiceSelected={voiceSelected}
-        voices={voices}
-        setVoiceSelected={setVoiceSelected}
-      />
-
+    <div >
       <Grid container>
-        <Grid item xs={12} sx={{ mb: 4 }}>
+        <Grid item xs={12} sx={{ mb: 8 }}>
           {
             <Grid item display="flex" direction="column" gap="2rem">
-              {conversations.map((conversation, index) => (
-                <Answer
-                  conversation={conversation}
-                  key={index}
-                  voiceSelected={voiceSelected}
-                />
-              ))}
+              {conversations.map((conversation, index) => {
+                const lastMessage = index === conversations.length - 1;
+                return (
+                  <Answer
+                    conversation={conversation}
+                    key={index}
+                    voiceSelected={voiceSelected}
+                    rate={rate}
+                    changeSpeed={changeSpeed}
+                    lastMessage={lastMessage}
+                  />
+                );
+              })}
               {loadingGPT && <CircularProgress size={16} />}
             </Grid>
           }
@@ -167,7 +200,7 @@ export default function Chat() {
             <Paper
               component="form"
               sx={{
-                p: "2px 4px",
+                p: "2rem 3rem",
                 display: "flex",
                 alignItems: "center",
                 width: "100%",
@@ -178,7 +211,7 @@ export default function Chat() {
                 placeholder="Digite alguma coisa"
                 inputProps={{
                   "aria-label": "digite alguma coisa para o bot responder",
-                  style: { fontSize: "2rem" },
+                  style: { fontSize: "1.5rem", lineHeight: "2rem" },
                 }}
                 value={currentMessage}
                 onChange={(e) => changeInput(e.target.value)}

@@ -1,4 +1,4 @@
-import { VoiceSelectedType } from '@/app/chat/components/ConfigLanguage';
+import { VoiceSelectedType } from '@/contexts/settingsContext';
 import Languagedetect from 'languagedetect'
 
 export const identifyLanguage = (text: string, voiceSelected: VoiceSelectedType | undefined) => {

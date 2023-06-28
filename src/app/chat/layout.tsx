@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { SnackbarProvider } from "material-ui-snackbar-provider";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { SettingsProvider } from "@/contexts/settingsContext";
 
 export default function RootLayout({
   children,
@@ -20,16 +21,18 @@ export default function RootLayout({
   }, [replace]);
 
   return (
-    <SnackbarProvider SnackbarProps={{ autoHideDuration: 4000 }}>
-      <ThemeProvider
-        theme={createTheme({
-          palette: {
-            mode: "dark"
-          }
-        })}
-      >
-        <Dashboard>{children}</Dashboard>
-      </ThemeProvider>
-    </SnackbarProvider>
+    <SettingsProvider>
+      <SnackbarProvider SnackbarProps={{ autoHideDuration: 4000 }}>
+        <ThemeProvider
+          theme={createTheme({
+            palette: {
+              mode: "dark",
+            },
+          })}
+        >
+          <Dashboard>{children}</Dashboard>
+        </ThemeProvider>
+      </SnackbarProvider>
+    </SettingsProvider>
   );
 }
